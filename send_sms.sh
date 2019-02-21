@@ -26,7 +26,8 @@ usage() {
   echo '''Usage: send_sms [OPTIONS]
   [OPTIONS]:
   -M MESSAGE      The message you wish to send (Maximum of 140 characters)
-  -N NUMBER       The recipients mobile number (Add "+countrycode")'''
+  -N NUMBER       The recipients mobile number (Add "+countrycode")
+                  You can pass multiple numbers by delimiting using a semicolo ";"'''
 }
 
 #main
@@ -46,22 +47,6 @@ while getopts "M:N:" opt; do
   esac
 done
 
-request="<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
-<SMSBoxXMLRequest>
-  <username>"$username"</username>
-  <password>"$pw"</password>
-  <command>WEBSEND</command>
-  <parameters>
-    <receiver>"$number"</receiver>
-    <service>"$service"</service>
-    <text>"$message"</text>
-    <guessOperator/>
-  </parameters>
-  <metadata>
-    <forceSender>"$sender"</forceSender>
-  </metadata>
-</SMSBoxXMLRequest>"
-
 if [ -z "$message" ]; then
   echo "Error: message is required"
   usage
@@ -73,15 +58,40 @@ if [ -z "$number" ]; then
   exit 3
 fi
 
-response=$($curl -s --header "Content-Type: text/xml" --connect-timeout 5 --request POST --data "$request" $url)
-status=$?
-if [[ $response == *"receiver status=\"ok\""* ]]; then
-  echo "SMS SENT"
-  exit 0
-elif [[ $status -eq 0 ]]; then
-  echo "SMS SEND FAILURE (API Error)"
-  echo "-- Response --"
-  echo $response
-else
-  echo "SMS SEND FAILURE (curl exit code = $status)"
-fi
+IFS=";"
+read -a recipients <<< "${number}"
+unset IFS
+
+for recipient in "${recipients[@]}"; do
+  request="<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+  <SMSBoxXMLRequest>
+    <username>"$username"</username>
+    <password>"$pw"</password>
+    <command>WEBSEND</command>
+    <parameters>
+      <receiver>"$recipient"</receiver>
+      <service>"$service"</service>
+      <text>"$message"</text>
+      <guessOperator/>
+    </parameters>
+    <metadata>
+      <forceSender>"$service"</forceSender>
+    </metadata>
+  </SMSBoxXMLRequest>"
+
+  response=$($curl -s --header "Content-Type: text/xml" --connect-timeout 5 --request POST --data "$request" $url)
+  status=$?
+
+  if [[ $response == *"receiver status=\"ok\""* ]]; then
+    echo "SMS SENT TO "$recipient
+  elif [[ $status -eq 0 ]]; then
+    echo "SMS SEND FAILURE (API Error)"
+    echo "-- Response --"
+    echo $response
+    exit 1
+  else
+    echo "SMS SEND FAILURE (curl exit code = $status)"
+    exit 2
+  fi
+done
+exit 0
