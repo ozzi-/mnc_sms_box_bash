@@ -15,7 +15,7 @@ Usage: send_sms [OPTIONS]
   [OPTIONS]:
   -M MESSAGE      The message you wish to send (Maximum of 140 characters)
   -N NUMBER       The recipients mobile number (Add "+countrycode")
+                  You can pass multiple numbers by delimiting using a semicolon ";"
 
-
-send_sms.sh -M "Test Message" -N "+41791234567"
+send_sms.sh -M "Test Message" -N "+41791234567;+41789876543"
 ```
