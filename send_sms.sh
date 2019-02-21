@@ -19,7 +19,7 @@ url="https://biz__INSTANCE__.smsbox.ch:8443/biz__INSTANCE__/sms/xml"
 username="___YOUR_USERNAME___"
 pw="___YOUR_PASSWORD___"
 service="___YOUR_SERVICE___"
-sender="ICINGA"
+sender="__YOUR_SENDER_NAME___"
 
 # Usage Info
 usage() {
