@@ -11,11 +11,11 @@ sender="ICINGA"
 
 ## Usage
 ```
-Usage: notify_sms [OPTIONS]
+Usage: send_sms [OPTIONS]
   [OPTIONS]:
   -M MESSAGE      The message you wish to send (Maximum of 140 characters)
   -N NUMBER       The recipients mobile number (Add "+countrycode")
 
 
-notify_sms.sh -M "Test Message" -N "+41791234567"
+send_sms.sh -M "Test Message" -N "+41791234567"
 ```
