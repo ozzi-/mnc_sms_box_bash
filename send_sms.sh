@@ -27,7 +27,7 @@ usage() {
   [OPTIONS]:
   -M MESSAGE      The message you wish to send (Maximum of 140 characters)
   -N NUMBER       The recipients mobile number (Add "+countrycode")
-                  You can pass multiple numbers by delimiting using a semicolo ";"'''
+                  You can pass multiple numbers by delimiting using a semicolon ";"'''
 }
 
 #main
