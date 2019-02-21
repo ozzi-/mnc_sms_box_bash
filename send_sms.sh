@@ -23,7 +23,7 @@ sender="ICINGA"
 
 # Usage Info
 usage() {
-  echo '''Usage: notify_sms [OPTIONS]
+  echo '''Usage: send_sms [OPTIONS]
   [OPTIONS]:
   -M MESSAGE      The message you wish to send (Maximum of 140 characters)
   -N NUMBER       The recipients mobile number (Add "+countrycode")'''
